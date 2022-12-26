@@ -1,0 +1,7 @@
+dotnet-aspnet-codegenerator controller -name AppointmentsController -m Appointment -dc DoktorE.Data.DoktorEContext -udl -outDir Controllers -f
+dotnet-aspnet-codegenerator controller -name BloodDonationsController -m BloodDonation -dc DoktorE.Data.DoktorEContext -udl -outDir Controllers -f
+dotnet-aspnet-codegenerator controller -name ClinicsController -m Clinic -dc DoktorE.Data.DoktorEContext -udl -outDir Controllers -f
+dotnet-aspnet-codegenerator controller -name InvoicesController -m Invoice -dc DoktorE.Data.DoktorEContext -udl -outDir Controllers -f
+dotnet-aspnet-codegenerator controller -name PatientsController -m Patient -dc DoktorE.Data.DoktorEContext -udl -outDir Controllers -f
+dotnet-aspnet-codegenerator controller -name PrescriptionsController -m Prescription -dc DoktorE.Data.DoktorEContext -udl -outDir Controllers -f
+dotnet-aspnet-codegenerator controller -name DoctorsController -m Doctor -dc DoktorE.Data.DoktorEContext -udl -outDir Controllers -f
