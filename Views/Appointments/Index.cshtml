@@ -1,4 +1,4 @@
-@model IEnumerable<web.Models.Appointment>
+@model PaginatedList<web.Models.Appointment>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,31 +9,43 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AppointmentDate)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Appointment Date</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DoctorsNote)
+                Doctor's note
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InvoiceID)
+                Invoice Sum
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Patient)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Patient</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Doctor)
+                Doctor
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Prescription)
+                Prescribed
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
+        
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -43,16 +55,18 @@
                 @Html.DisplayFor(modelItem => item.DoctorsNote)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.InvoiceID)
+                @Html.DisplayFor(modelItem => item.Invoice.sum)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Patient.ID)
+                @Html.DisplayFor(modelItem => item.Patient.Ime)
+                @Html.DisplayFor(modelItem => item.Patient.Priimek)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Doctor.ID)
+                @Html.DisplayFor(modelItem => item.Doctor.Ime)
+                @Html.DisplayFor(modelItem => item.Doctor.Priimek)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Prescription.ID)
+                @Html.DisplayFor(modelItem => item.Prescription.drugs)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
@@ -63,3 +77,23 @@
 }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

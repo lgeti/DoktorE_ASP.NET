@@ -25,10 +25,53 @@ namespace web.Controllers
         }
 
         // GET: Appointments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+        string sortOrder,
+        string currentFilter,
+        string searchString,
+        int? pageNumber)
         {
-            var doktorEContext = _context.Appointments.Include(a => a.Doctor).Include(a => a.Patient).Include(a => a.Prescription);
-            return View(await doktorEContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var appointments = from a in _context.Appointments 
+                            select a;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                appointments = appointments.Where(a => a.Patient.Priimek.Contains(searchString)
+                                    || a.Patient.Ime.Contains(searchString));
+            }
+            appointments = _context.Appointments.Include(a => a.Doctor).Include(a => a.Patient).Include(a => a.Prescription).Include(a => a.Invoice);
+             switch (sortOrder)
+            {
+                case "name_desc":
+                    appointments = appointments.OrderByDescending(a => a.Patient.Priimek);
+                    break;
+                case "Date":
+                    appointments = appointments.OrderBy(a => a.AppointmentDate);
+                    break;
+                case "date_desc":
+                    appointments = appointments.OrderByDescending(a => a.AppointmentDate);
+                    break;
+                default:
+                    appointments = appointments.OrderBy(a => a.Patient.Priimek);
+                    break;
+            }
+            int pageSize = 3;
+            
+            return View(await PaginatedList<Appointment>.CreateAsync(appointments.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Appointments/Details/5
