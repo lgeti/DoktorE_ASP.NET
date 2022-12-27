@@ -78,22 +78,35 @@ namespace web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,AppointmentDate,DoctorsNote,PatientID,DoctorID,PrescriptionID,InvoiceID")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("AppointmentDate,DoctorsNote,PatientID,DoctorID,PrescriptionID,InvoiceID")] Appointment appointment)
         {
             var currentUser = await _usermanager.GetUserAsync(User);
-
-            if (ModelState.IsValid)
+            
+            try
             {
-                appointment.Owner = currentUser;
+                 if (ModelState.IsValid)
+                {
+                    appointment.Owner = currentUser;
 
-                _context.Add(appointment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    _context.Add(appointment);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                 
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
             }
             ViewData["DoctorID"] = new SelectList(_context.Doctors, "ID", "ID", appointment.DoctorID);
             ViewData["PatientID"] = new SelectList(_context.Patients, "ID", "ID", appointment.PatientID);
             ViewData["PrescriptionID"] = new SelectList(_context.Prescriptions, "ID", "ID", appointment.PrescriptionID);
             return View(appointment);
+        
+
         }
 
         // GET: Appointments/Edit/5
