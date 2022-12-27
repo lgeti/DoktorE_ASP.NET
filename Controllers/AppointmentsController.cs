@@ -51,6 +51,9 @@ namespace web.Controllers
                 .Include(a => a.Prescription)
                 .AsNoTracking()
 
+                .Include(a => a.Invoice)
+                .AsNoTracking()
+
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (appointment == null)
             {

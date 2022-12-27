@@ -37,6 +37,9 @@ namespace web.Controllers
             }
 
             var clinic = await _context.Clinics
+                .Include(c => c.Doctors)
+                .AsNoTracking()
+
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (clinic == null)
             {

@@ -38,6 +38,23 @@ namespace web.Controllers
             }
 
             var patient = await _context.Patients
+                .Include(p => p.Appointments)
+                    .ThenInclude(a => a.Doctor)
+                .AsNoTracking()
+
+                .Include(p => p.Appointments)
+                    .ThenInclude(a => a.Invoice)
+                .AsNoTracking()
+
+                .Include(p => p.BloodDonations)
+                .AsNoTracking()
+
+                .Include(p => p.Invoices)
+                .AsNoTracking()
+
+                .Include(p => p.Prescriptions)
+                .AsNoTracking()
+
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (patient == null)
             {

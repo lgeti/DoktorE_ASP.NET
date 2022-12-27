@@ -8,6 +8,7 @@
 
 <div>
     <h4>Patient</h4>
+    <h5>Info</h5>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -27,6 +28,81 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Priimek)
+        </dd>
+        <hr />
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Appointments)
+        </dt>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>Date</th>
+                    <th>Doctor</th>
+                    <th>Specialty</th>
+                    <th>Invoice</th>
+                </tr>
+                @foreach (var item in Model.Appointments)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AppointmentDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor.Ime)
+                            @Html.DisplayFor(modelItem => item.Doctor.Priimek)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor.Specialty)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Invoice.sum)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BloodDonations)
+        </dt>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>Date</th>
+                </tr>
+                @foreach (var item in Model.BloodDonations)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.date)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Prescriptions)
+        </dt>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>Expiry Date</th>
+                    <th>Drugs</th>
+                </tr>
+                @foreach (var item in Model.Appointments)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Prescription.expiryDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Prescription.drugs)
+                        </td>
+                    </tr>
+                }
+            </table>
         </dd>
     </dl>
 </div>
