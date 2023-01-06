@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using web.Data;
+using web.Filters;
 using web.Models;
 
 namespace web.Controllers_Api
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKeyAuth]
     public class PrescriptionsApiController : ControllerBase
     {
         private readonly DoktorEContext _context;
