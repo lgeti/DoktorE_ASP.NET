@@ -25,6 +25,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddPatientActivity extends AppCompatActivity {
 
@@ -48,7 +50,7 @@ public class AddPatientActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(getApplicationContext());
     }
 
-    public void addStudent(View view){
+    public void addPatient(View view){
         this.status.setText("Posting to " + url);
         try {
             JSONObject jsonBody = new JSONObject();
@@ -93,6 +95,15 @@ public class AddPatientActivity extends AppCompatActivity {
                         status.setText(responseString);
                     }
                     return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                }
+
+                @Override
+                public Map<String,String> getHeaders() throws AuthFailureError
+                {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("ApiKey", "SecretKey");
+                    params.put("Content-Type", "application/json");
+                    return params;
                 }
 
             };
